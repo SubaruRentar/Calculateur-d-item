@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculateur de Craft</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .section {
+            margin-bottom: 25px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .section-title {
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        .input-group:last-child {
+            margin-bottom: 0;
+        }
+        
+        label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .rarity-badge {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        .vert { background-color: #10b981; }
+        .bleu { background-color: #3b82f6; }
+        .violet { background-color: #8b5cf6; }
+        
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .results {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f0fdf4;
+            border-left: 4px solid #10b981;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .results.error {
+            background: #fef2f2;
+            border-left-color: #ef4444;
+        }
+        
+        .results h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .results p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+            color: #555;
+        }
+        
+        .results ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .results li {
+            margin-bottom: 8px;
+            color: #555;
+        }
+        
+        .highlight {
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .error-text {
+            color: #ef4444;
+            font-weight: bold;
+        }
+        
+        .success-text {
+            color: #10b981;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚒️ Calculateur de Craft</h1>
+        <p class="subtitle">3 verts → 1 bleu | 3 bleus → 1 violet</p>
+        
+        <div class="section">
+            <div class="section-title">🎯 Objectif</div>
+            <div class="input-group">
+                <label>
+                    <span class="rarity-badge violet"></span>
+                    Violets souhaités
+                </label>
+                <input type="number" id="objectif-violet" min="0" value="0">
+            </div>
+            <div class="input-group">
+                <label>
+                    <span class="rarity-badge bleu"></span>
+                    Bleus souhaités
+                </label>
+                <input type="number" id="objectif-bleu" min="0" value="0">
+            </div>
+            <div class="input-group">
+                <label>
+                    <span class="rarity-badge vert"></span>
+                    Verts souhaités
+                </label>
+                <input type="number" id="objectif-vert" min="0" value="0">
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">📦 Ressources actuelles</div>
+            <div class="input-group">
+                <label>
+                    <span class="rarity-badge violet"></span>
+                    Violets en stock
+                </label>
+                <input type="number" id="stock-violet" min="0" value="0">
+            </div>
+            <div class="input-group">
+                <label>
+                    <span class="rarity-badge bleu"></span>
+                    Bleus en stock
+                </label>
+                <input type="number" id="stock-bleu" min="0" value="0">
+            </div>
+            <div class="input-group">
+                <label>
+                    <span class="rarity-badge vert"></span>
+                    Verts en stock
+                </label>
+                <input type="number" id="stock-vert" min="0" value="0">
+            </div>
+        </div>
+        
+        <button class="btn" onclick="calculer()">Calculer</button>
+        
+        <div id="results" class="results"></div>
+    </div>
+    
+    <script>
+        function calculer() {
+            // Récupérer les valeurs
+            const objectifViolet = parseInt(document.getElementById('objectif-violet').value) || 0;
+            const objectifBleu = parseInt(document.getElementById('objectif-bleu').value) || 0;
+            const objectifVert = parseInt(document.getElementById('objectif-vert').value) || 0;
+            
+            const stockViolet = parseInt(document.getElementById('stock-violet').value) || 0;
+            const stockBleu = parseInt(document.getElementById('stock-bleu').value) || 0;
+            const stockVert = parseInt(document.getElementById('stock-vert').value) || 0;
+            
+            // Calculer ce qu'il manque
+            const manqueViolet = Math.max(0, objectifViolet - stockViolet);
+            const manqueBleu = Math.max(0, objectifBleu - stockBleu);
+            const manqueVert = Math.max(0, objectifVert - stockVert);
+            
+            // Calculer les besoins en bleus pour les violets manquants
+            const bleusNecessaires = manqueViolet * 3;
+            
+            // Calculer le total de bleus nécessaires
+            const totalBleusNecessaires = manqueBleu + bleusNecessaires;
+            
+            // Calculer combien de bleus on peut utiliser (en gardant l'objectif)
+            const bleusDisponibles = Math.max(0, stockBleu - objectifBleu);
+            
+            // Calculer combien de bleus il faut encore crafter
+            const bleusACrafter = Math.max(0, totalBleusNecessaires - bleusDisponibles);
+            
+            // Calculer les verts nécessaires pour crafter ces bleus
+            const vertsPourBleus = bleusACrafter * 3;
+            
+            // Calculer le total de verts nécessaires
+            const totalVertsNecessaires = manqueVert + vertsPourBleus;
+            
+            // Calculer combien de verts on peut utiliser (en gardant l'objectif)
+            const vertsDisponibles = Math.max(0, stockVert - objectifVert);
+            
+            // Vérifier si on a assez
+            const vertsManquants = Math.max(0, totalVertsNecessaires - vertsDisponibles);
+            
+            // Afficher les résultats
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.style.display = 'block';
+            
+            let html = '<h3>📊 Résultats</h3>';
+            html += `<p><strong>Analyse :</strong></p>`;
+            html += `<ul>`;
+            html += `<li>Violets manquants : <span class="highlight">${manqueViolet}</span></li>`;
+            html += `<li>Bleus manquants : <span class="highlight">${manqueBleu}</span></li>`;
+            html += `<li>Verts manquants : <span class="highlight">${manqueVert}</span></li>`;
+            html += `</ul>`;
+            
+            if (vertsManquants === 0) {
+                resultsDiv.className = 'results';
+                html += `<p class="success-text">✅ Vous avez suffisamment de ressources !</p>`;
+                
+                if (bleusACrafter > 0 || manqueViolet > 0 || manqueBleu > 0 || manqueVert > 0) {
+                    html += `<p><strong>📋 Plan de craft optimal :</strong></p>`;
+                    html += `<ul>`;
+                    
+                    if (bleusACrafter > 0) {
+                        html += `<li>Crafter <span class="highlight">${bleusACrafter} bleu(s)</span> avec ${vertsPourBleus} vert(s)</li>`;
+                    }
+                    
+                    if (manqueViolet > 0) {
+                        html += `<li>Crafter <span class="highlight">${manqueViolet} violet(s)</span> avec ${bleusNecessaires} bleu(s)</li>`;
+                    }
+                    
+                    html += `</ul>`;
+                    
+                    // Calculer ce qui restera
+                    const vertsRestants = stockVert - vertsPourBleus - manqueVert;
+                    const bleusRestants = stockBleu + bleusACrafter - bleusNecessaires - manqueBleu;
+                    
+                    html += `<p><strong>📦 Après les crafts :</strong></p>`;
+                    html += `<ul>`;
+                    html += `<li>Verts restants : <span class="highlight">${vertsRestants}</span></li>`;
+                    html += `<li>Bleus restants : <span class="highlight">${bleusRestants}</span></li>`;
+                    html += `<li>Violets : <span class="highlight">${objectifViolet}</span></li>`;
+                    html += `</ul>`;
+                } else {
+                    html += `<p>🎉 Aucun craft nécessaire, vous avez déjà tout !</p>`;
+                }
+            } else {
+                resultsDiv.className = 'results error';
+                html += `<p class="error-text">❌ Vous n'avez pas suffisamment de ressources !</p>`;
+                html += `<p>Il vous manque : <span class="error-text">${vertsManquants} vert(s)</span></p>`;
+                
+                if (bleusACrafter > 0 || manqueViolet > 0) {
+                    html += `<p><strong>📋 Avec ces ${vertsManquants} verts supplémentaires :</strong></p>`;
+                    html += `<ul>`;
+                    
+                    if (bleusACrafter > 0) {
+                        html += `<li>Vous pourriez crafter ${bleusACrafter} bleu(s)</li>`;
+                    }
+                    
+                    if (manqueViolet > 0) {
+                        html += `<li>Puis crafter ${manqueViolet} violet(s)</li>`;
+                    }
+                    
+                    html += `</ul>`;
+                }
+            }
+            
+            resultsDiv.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
